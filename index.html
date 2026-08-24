@@ -3,118 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAKUN NGAHIJI - Sistem Informasi RW 07</title>
+<title>JAKUN NGAHIJI</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-  .bg-gradient-blue { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-  .btn-orange { background-color: #f97316; }
-  .btn-orange:hover { background-color: #ea580c; }
-  .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-  .modal-content { background-color: white; margin: 10% auto; padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; }
-</style>
 </head>
 <body class="bg-gray-100">
-
-<header class="bg-gradient-blue text-white p-4 text-center">
+<header class="bg-blue-800 text-white p-4 text-center">
   <h1 class="text-2xl font-bold">JAKUN NGAHIJI</h1>
-  <p class="text-sm">Mari bersama menjaga lingkungan Jakun - RW 07, RT 13 & RT 14</p>
+  <p>RW 07, RT 13 & RT 14</p>
 </header>
 
-<div id="loginPage" class="p-4">
-  <div class="bg-white rounded-lg shadow p-6 text-center">
+<div id="login" class="p-4">
+  <div class="bg-white p-6 rounded shadow text-center">
     <h2 class="text-xl font-bold mb-4">Selamat Datang</h2>
-    <button onclick="showDashboard('warga')" class="w-full bg-blue-600 text-white py-3 rounded mb-3">Akses Warga</button>
-    <button onclick="showLoginAdmin()" class="w-full btn-orange text-white py-3 rounded">Akses Admin</button>
+    <button onclick="alert('Masuk sebagai Warga')" class="w-full bg-blue-600 text-white py-3 rounded mb-2">Akses Warga</button>
+    <button onclick="document.getElementById('login').style.display='none';document.getElementById('admin').style.display='block'" class="w-full bg-orange-500 text-white py-3 rounded">Akses Admin</button>
   </div>
 </div>
 
-<div id="loginAdminForm" class="p-4 hidden">
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-xl font-bold mb-4">Login Admin</h2>
-    <input id="username" type="text" placeholder="Username" class="w-full border p-2 rounded mb-3">
-    <input id="password" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3">
-    <button onclick="login()" class="w-full bg-blue-600 text-white py-2 rounded">Login</button>
-    <button onclick="backToLogin()" class="w-full mt-2 text-gray-600">Kembali</button>
-  </div>
+<div id="admin" style="display:none" class="p-4">
+  <h2 class="font-bold mb-2">Login Admin</h2>
+  <input id="user" placeholder="Username" class="w-full border p-2 mb-2">
+  <input id="pass" type="password" placeholder="Password" class="w-full border p-2 mb-2">
+  <button onclick="if(document.getElementById('user').value=='admin'){document.getElementById('admin').style.display='none';document.getElementById('app').style.display='block'}else{alert('salah')}" class="w-full bg-blue-600 text-white py-2 rounded">Login</button>
 </div>
 
-<div id="dashboard" class="hidden">
-  <nav class="bg-white flex overflow-x-auto border-b">
-    <button onclick="showTab('dashboardTab')" class="p-3 text-orange-600 border-b-2 border-orange-600 whitespace-nowrap">Dashboard</button>
-    <button onclick="showTab('wargaTab')" class="p-3 text-blue-600 whitespace-nowrap">Data Warga</button>
-    <button onclick="showTab('kasTab')" class="p-3 text-blue-600 whitespace-nowrap">Kas RW</button>
-    <button onclick="showTab('pengaturanTab')" class="p-3 text-blue-600 whitespace-nowrap">Pengaturan</button>
-  </nav>
-  <div class="p-4">
-    <div id="dashboardTab">Dashboard Content</div>
-    <div id="wargaTab" class="hidden">
-      <input id="searchWarga" onkeyup="renderWarga()" placeholder="Cari nama..." class="w-full border p-2 rounded mb-3">
-      <button onclick="showModalTambah()" class="bg-blue-600 text-white px-4 py-2 rounded">+ Tambah KK Baru</button>
-      <div id="listWarga" class="mt-4"></div>
-    </div>
-    <div id="kasTab" class="hidden">Kas RW Content</div>
-    <div id="pengaturanTab" class="hidden">
-      <h3 class="font-bold mb-3">Pengaturan Ketua</h3>
-      <select id="ketuaRW" class="w-full border p-2 rounded mb-2"></select>
-      <select id="ketuaRT13" class="w-full border p-2 rounded mb-2"></select>
-      <select id="ketuaRT14" class="w-full border p-2 rounded mb-2"></select>
-      <button onclick="simpanPengaturan()" class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
-    </div>
+<div id="app" style="display:none" class="p-4">
+  <button onclick="document.getElementById('form').style.display='block'" class="bg-blue-600 text-white px-4 py-2 rounded">+ Tambah KK Baru</button>
+  <div id="form" style="display:none" class="bg-white p-4 mt-3 rounded shadow">
+    <input id="nama" placeholder="Nama Kepala KK" class="w-full border p-2 mb-2">
+    <button onclick="alert('Data '+document.getElementById('nama').value+' disimpan')" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
   </div>
 </div>
-
-<!-- MODAL TAMBAH WARGA -->
-<div id="modalTambah" class="modal">
-  <div class="modal-content">
-    <h3 class="text-lg font-bold mb-3">Tambah KK Baru</h3>
-    <input id="noKK" placeholder="No KK" class="w-full border p-2 rounded mb-2">
-    <input id="namaKepala" placeholder="Nama Kepala Keluarga" class="w-full border p-2 rounded mb-2">
-    <select id="rt" class="w-full border p-2 rounded mb-2"><option value="13">RT 13</option><option value="14">RT 14</option></select>
-    <input id="noWA" placeholder="No WA 08xxxx" class="w-full border p-2 rounded mb-3">
-    <button onclick="simpanWarga()" class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
-    <button onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded">Batal</button>
-  </div>
-</div>
-
-<script>
-let dataWarga = JSON.parse(localStorage.getItem('dataWarga')) || [];
-let pengaturan = JSON.parse(localStorage.getItem('pengaturan')) || {};
-
-function showDashboard(role){ document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboard').classList.remove('hidden'); renderWarga(); loadPengaturan(); }
-function showLoginAdmin(){ document.getElementById('loginPage').classList.add('hidden'); document.getElementById('loginAdminForm').classList.remove('hidden'); }
-function backToLogin(){ document.getElementById('loginAdminForm').classList.add('hidden'); document.getElementById('loginPage').classList.remove('hidden'); }
-function login(){ if(document.getElementById('username').value=='admin' && document.getElementById('password').value=='jakun123'){ showDashboard('admin'); }else{ alert('Login gagal'); } }
-function showTab(tab){ ['dashboardTab','wargaTab','kasTab','pengaturanTab'].forEach(t=>document.getElementById(t).classList.add('hidden')); document.getElementById(tab).classList.remove('hidden'); }
-function showModalTambah(){ document.getElementById('modalTambah').style.display='block'; }
-function closeModal(){ document.getElementById('modalTambah').style.display='none'; }
-
-function simpanWarga(){
-  let warga = {
-    noKK: document.getElementById('noKK').value,
-    nama: document.getElementById('namaKepala').value,
-    rt: document.getElementById('rt').value,
-    wa: document.getElementById('noWA').value
-  };
-  dataWarga.push(warga);
-  localStorage.setItem('dataWarga', JSON.stringify(dataWarga));
-  closeModal();
-  renderWarga();
-  loadPengaturan();
-  alert('Data berhasil disimpan');
-}
-
-function renderWarga(){
-  let html = '';
-  dataWarga.forEach((w,i)=>{
-    html += `<div class="bg-white p-3 rounded shadow mb-2">
-      <b>${w.nama}</b><br>KK: ${w.noKK}<br>RT: ${w.rt}<br>WA: ${w.wa}
-    </div>`;
-  });
-  document.getElementById('listWarga').innerHTML = html || '<p>Belum ada data</p>';
-}
-
-function loadPengaturan(){
-  let opt = '<option>Pilih Nama</option>';
-  dataWarga.forEach(w=>{ opt += `<option value="${w.nama}">${w.nama} - RT ${w.rt}</option>` });
-  document.getElementById('ketuaRW').innerHTML = opt;
-  document.getElementById
+</body>
+</html>
