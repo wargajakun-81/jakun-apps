@@ -3,36 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAKUN NGAHIJI</title>
+<title>JAKUN NGAHIJI - RW 07</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .bg-gradient-blue { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+  .btn-orange { background-color: #f97316; }
+  .btn-orange:hover { background-color: #ea580c; }
+</style>
 </head>
 <body class="bg-gray-100">
-<header class="bg-blue-800 text-white p-4 text-center">
-  <h1 class="text-2xl font-bold">JAKUN NGAHIJI</h1>
-  <p>RW 07, RT 13 & RT 14</p>
+
+<header class="bg-gradient-blue text-white p-6 text-center shadow-lg">
+  <h1 class="text-3xl font-bold">JAKUN NGAHIJI</h1>
+  <p class="text-sm mt-1">Sistem Informasi Terpadu Warga Jakun</p>
+  <p class="text-xs">RW 07, RT 13 & RT 14</p>
 </header>
 
-<div id="login" class="p-4">
-  <div class="bg-white p-6 rounded shadow text-center">
-    <h2 class="text-xl font-bold mb-4">Selamat Datang</h2>
-    <button onclick="alert('Masuk sebagai Warga')" class="w-full bg-blue-600 text-white py-3 rounded mb-2">Akses Warga</button>
-    <button onclick="document.getElementById('login').style.display='none';document.getElementById('admin').style.display='block'" class="w-full bg-orange-500 text-white py-3 rounded">Akses Admin</button>
+<div id="login" class="p-4 max-w-md mx-auto mt-10">
+  <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+    <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" class="w-20 mx-auto mb-4">
+    <h2 class="text-2xl font-bold text-blue-800 mb-6">Selamat Datang</h2>
+    <button onclick="masukWarga()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold mb-3 shadow">Akses Warga</button>
+    <button onclick="tampilAdmin()" class="w-full btn-orange text-white py-3 rounded-lg font-semibold shadow">Akses Admin</button>
   </div>
 </div>
 
-<div id="admin" style="display:none" class="p-4">
-  <h2 class="font-bold mb-2">Login Admin</h2>
-  <input id="user" placeholder="Username" class="w-full border p-2 mb-2">
-  <input id="pass" type="password" placeholder="Password" class="w-full border p-2 mb-2">
-  <button onclick="if(document.getElementById('user').value=='admin'){document.getElementById('admin').style.display='none';document.getElementById('app').style.display='block'}else{alert('salah')}" class="w-full bg-blue-600 text-white py-2 rounded">Login</button>
-</div>
-
-<div id="app" style="display:none" class="p-4">
-  <button onclick="document.getElementById('form').style.display='block'" class="bg-blue-600 text-white px-4 py-2 rounded">+ Tambah KK Baru</button>
-  <div id="form" style="display:none" class="bg-white p-4 mt-3 rounded shadow">
-    <input id="nama" placeholder="Nama Kepala KK" class="w-full border p-2 mb-2">
-    <button onclick="alert('Data '+document.getElementById('nama').value+' disimpan')" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+<div id="adminLogin" class="p-4 max-w-md mx-auto mt-10" style="display:none">
+  <div class="bg-white p-8 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-blue-800 mb-4 text-center">Login Admin</h2>
+    <input id="user" placeholder="Username" class="w-full border-2 border-gray-300 p-3 rounded-lg mb-3">
+    <input id="pass" type="password" placeholder="Password" class="w-full border-2 border-gray-300 p-3 rounded-lg mb-4">
+    <button onclick="login()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold">Login</button>
+    <button onclick="kembali()" class="w-full mt-2 text-gray-600">Kembali</button>
   </div>
 </div>
-</body>
-</html>
+
+<div id="app" style="display:none">
+  <nav class="bg-white shadow flex overflow-x-auto">
+    <button onclick="tab('dash')" class="p-4 text-blue-600 font-semibold border-b-4 border-blue-600">Dashboard</button>
+    <button onclick="tab('warga')" class="p-4 text-gray-600">Data Warga</button>
+  </nav>
+  <div class="p-4">
+    <div id="dash">
+      <div class="bg-white p-6 rounded-xl shadow mb-4">
+        <h3 class="font-bold text-lg text-blue-800">Dashboard RW 07</h3>
+        <p>Total KK: <span id="totalKK">0</span></p>
+        <button onclick="tampilForm()" class="btn-orange text-white px-4 py-2 rounded-lg mt-3">+ Tambah KK Baru</button>
+      </div>
+    </div>
+    <div id="warga" style="display:none">
+      <div id="formKK" class="bg-white p-4 rounded-xl shadow mb-3" style="display:none">
+        <input id="nama" placeholder="Nama Kepala KK" class="w-full border p-2 rounded mb-2">
+        <button onclick="simpan()" class="bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+      </div>
+      <div id="listKK"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem('warga')) || [];
+function
