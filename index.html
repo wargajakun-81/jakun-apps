@@ -3,186 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JAKUN NGAHIJI - Sistem Informasi Terpadu Warga</title>
+<title>JAKUN NGAHIJI - Sistem Informasi RW 07</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-  :root {
-    --biru: #2563eb; --biru-grad: linear-gradient(135deg, #2563eb, #1e40af);
-    --putih: #ffffff; --orange: #f97316; --abu: #f1f5f9; --teks: #1e293b;
-  }
-    * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-  body { margin: 0; background: var(--abu); color: var(--teks); }
-  header { background: var(--biru-grad); color: var(--putih); padding: 15px; text-align: center; }
-  header h1 { margin: 0; font-size: 20px; }
-  header p { margin: 5px 0 0; font-size: 12px; opacity: 0.9; }
-  .login { max-width: 400px; margin: 40px auto; padding: 20px; background: var(--putih); border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-  .login button { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-  .btn-warga { background: var(--biru); color: white; }
-  .btn-admin { background: var(--orange); color: white; }
-  nav { display: flex; overflow-x: auto; background: var(--putih); border-bottom: 2px solid var(--biru); }
-  nav button { flex: 1; padding: 12px; border: none; background: none; font-weight: bold; color: var(--biru); cursor: pointer; }
-  nav button.active { border-bottom: 3px solid var(--orange); color: var(--orange); }
-  .content { padding: 15px; display: none; }
-  .content.active { display: block; }
-  .card { background: var(--putih); padding: 15px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-  .badge { display: inline-block; padding: 3px 8px; font-size: 10px; border-radius: 6px; background: var(--orange); color: white; margin-left: 5px; }
-  .badge-darurat { background: red; }
-  input, select, textarea { width: 100%; padding: 8px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; }
-  .btn { background: var(--biru); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
+  .bg-gradient-blue { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
+  .btn-orange { background-color: #f97316; }
+  .btn-orange:hover { background-color: #ea580c; }
+  .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+  .modal-content { background-color: white; margin: 10% auto; padding: 20px; border-radius: 10px; width: 90%; max-width: 500px; }
 </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-<header>
-  <h1>JAKUN NGAHIJI</h1>
-  <p>Mari bersama menjaga lingkungan Jakun - RW 07, RT 13 & RT 14</p>
+<header class="bg-gradient-blue text-white p-4 text-center">
+  <h1 class="text-2xl font-bold">JAKUN NGAHIJI</h1>
+  <p class="text-sm">Mari bersama menjaga lingkungan Jakun - RW 07, RT 13 & RT 14</p>
 </header>
 
-<div id="loginPage" class="login">
-  <h2 style="text-align:center;">Selamat Datang</h2>
-  <button class="btn-warga" onclick="login('warga')">Akses Warga</button>
-  <button class="btn-admin" onclick="showAdminLogin()">Akses Admin</button>
-  
-  <div id="adminLogin" style="display:none; margin-top:15px;">
-    <input type="text" id="user" placeholder="Username">
-    <input type="password" id="pass" placeholder="Password">
-    <button class="btn" onclick="login('admin')">Masuk</button>
+<div id="loginPage" class="p-4">
+  <div class="bg-white rounded-lg shadow p-6 text-center">
+    <h2 class="text-xl font-bold mb-4">Selamat Datang</h2>
+    <button onclick="showDashboard('warga')" class="w-full bg-blue-600 text-white py-3 rounded mb-3">Akses Warga</button>
+    <button onclick="showLoginAdmin()" class="w-full btn-orange text-white py-3 rounded">Akses Admin</button>
   </div>
 </div>
 
-<div id="app" style="display:none;">
-  <nav>
-    <button class="tabBtn active" onclick="showTab('dashboard')">Dashboard</button>
-    <button class="tabBtn" onclick="showTab('data')">Data Warga</button>
-    <button class="tabBtn" onclick="showTab('kas')">Kas RW</button>
-    <button class="tabBtn" onclick="showTab('statistik')">Statistik</button>
-    <button class="tabBtn" onclick="showTab('lapor')">Warga Melapor</button>
-    <button class="tabBtn" onclick="showTab('kegiatan')">Kegiatan</button>
-    <button class="tabBtn" onclick="showTab('pengumuman')">Pengumuman</button>
-    <button class="tabBtn" id="btnPengaturan" style="display:none;" onclick="showTab('pengaturan')">Pengaturan</button>
+<div id="loginAdminForm" class="p-4 hidden">
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-bold mb-4">Login Admin</h2>
+    <input id="username" type="text" placeholder="Username" class="w-full border p-2 rounded mb-3">
+    <input id="password" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3">
+    <button onclick="login()" class="w-full bg-blue-600 text-white py-2 rounded">Login</button>
+    <button onclick="backToLogin()" class="w-full mt-2 text-gray-600">Kembali</button>
+  </div>
+</div>
+
+<div id="dashboard" class="hidden">
+  <nav class="bg-white flex overflow-x-auto border-b">
+    <button onclick="showTab('dashboardTab')" class="p-3 text-orange-600 border-b-2 border-orange-600 whitespace-nowrap">Dashboard</button>
+    <button onclick="showTab('wargaTab')" class="p-3 text-blue-600 whitespace-nowrap">Data Warga</button>
+    <button onclick="showTab('kasTab')" class="p-3 text-blue-600 whitespace-nowrap">Kas RW</button>
+    <button onclick="showTab('pengaturanTab')" class="p-3 text-blue-600 whitespace-nowrap">Pengaturan</button>
   </nav>
-
-  <div id="dashboard" class="content active">
-    <div class="card">
-      <h3>Kontak Pengurus</h3>
-      <p><b>Ketua RW:</b> <span id="ketuaRW">-</span> <a href="https://wa.me/" id="waRW">WA</a></p>
-      <p><b>Ketua RT 13:</b> <span id="ketuaRT13">-</span> <a href="https://wa.me/" id="waRT13">WA</a></p>
-      <p><b>Ketua RT 14:</b> <span id="ketuaRT14">-</span> <a href="https://wa.me/" id="waRT14">WA</a></p>
+  <div class="p-4">
+    <div id="dashboardTab">Dashboard Content</div>
+    <div id="wargaTab" class="hidden">
+      <input id="searchWarga" onkeyup="renderWarga()" placeholder="Cari nama..." class="w-full border p-2 rounded mb-3">
+      <button onclick="showModalTambah()" class="bg-blue-600 text-white px-4 py-2 rounded">+ Tambah KK Baru</button>
+      <div id="listWarga" class="mt-4"></div>
     </div>
-    <div class="card"><h3>Ulang Tahun Bulan Ini</h3><div id="ultah"></div></div>
-    <div class="card"><h3>Pengumuman Terkini</h3><div id="listPengumuman"></div></div>
-    <div class="card"><h3>Laporan Belum Selesai</h3><div id="listLaporan"></div></div>
+    <div id="kasTab" class="hidden">Kas RW Content</div>
+    <div id="pengaturanTab" class="hidden">
+      <h3 class="font-bold mb-3">Pengaturan Ketua</h3>
+      <select id="ketuaRW" class="w-full border p-2 rounded mb-2"></select>
+      <select id="ketuaRT13" class="w-full border p-2 rounded mb-2"></select>
+      <select id="ketuaRT14" class="w-full border p-2 rounded mb-2"></select>
+      <button onclick="simpanPengaturan()" class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
+    </div>
   </div>
+</div>
 
-  <div id="data" class="content">
-    <div class="card">
-      <input type="text" id="cari" placeholder="Cari nama..." onkeyup="renderWarga()">
-      <button class="btn" onclick="tambahKK()">+ Tambah KK Baru</button>
-    </div>
-    <div id="listWarga"></div>
-  </div>
-
-  <div id="kas" class="content">
-    <div class="card">
-      <h3>Saldo</h3>
-      <p>Iuran Wajib: Rp <span id="saldoWajib">0</span></p>
-      <p>Lain-lain: Rp <span id="saldoLain">0</span></p>
-      <p><b>Total: Rp <span id="saldoTotal">0</span></b></p>
-      <button class="btn" onclick="tambahTransaksi()">+ Tambah Transaksi</button>
-    </div>
-    <div id="listTransaksi"></div>
-  </div>
-
-  <div id="statistik" class="content"><div class="card" id="boxStatistik"></div></div>
-  
-  <div id="lapor" class="content">
-    <div class="card">
-      <h3>Buat Laporan</h3>
-      <input type="text" id="namaPelapor" placeholder="Nama Pelapor">
-      <select id="jenisLapor"><option>Kerusakan</option><option>Keamanan</option><option class="badge-darurat">Darurat</option></select>
-      <input type="text" id="lokasi" placeholder="Lokasi/Patokan">
-      <input type="file" id="fotoLapor">
-      <button class="btn" onclick="kirimLaporan()">Kirim</button>
-    </div>
-    <div id="listSemuaLaporan"></div>
-  </div>
-
-  <div id="kegiatan" class="content">
-    <div class="card" id="formKegiatan" style="display:none;">
-      <input type="text" id="namaKegiatan" placeholder="Nama Kegiatan">
-      <input type="date" id="tglKegiatan">
-      <input type="file" id="fotoKegiatan">
-      <button class="btn" onclick="simpanKegiatan()">Simpan</button>
-    </div>
-    <div id="listKegiatan"></div>
-  </div>
-
-  <div id="pengumuman" class="content">
-    <div class="card" id="formPengumuman" style="display:none;">
-      <textarea id="isiPengumuman" placeholder="Isi Pengumuman"></textarea>
-      <button class="btn" onclick="simpanPengumuman()">Simpan</button>
-    </div>
-    <div id="listPengumumanFull"></div>
-  </div>
-
-  <div id="pengaturan" class="content">
-    <div class="card">
-      <h3>Pengaturan Ketua</h3>
-      <select id="setRW"></select>
-      <select id="setRT13"></select>
-      <select id="setRT14"></select>
-      <button class="btn" onclick="simpanPengaturan()">Simpan</button>
-    </div>
+<!-- MODAL TAMBAH WARGA -->
+<div id="modalTambah" class="modal">
+  <div class="modal-content">
+    <h3 class="text-lg font-bold mb-3">Tambah KK Baru</h3>
+    <input id="noKK" placeholder="No KK" class="w-full border p-2 rounded mb-2">
+    <input id="namaKepala" placeholder="Nama Kepala Keluarga" class="w-full border p-2 rounded mb-2">
+    <select id="rt" class="w-full border p-2 rounded mb-2"><option value="13">RT 13</option><option value="14">RT 14</option></select>
+    <input id="noWA" placeholder="No WA 08xxxx" class="w-full border p-2 rounded mb-3">
+    <button onclick="simpanWarga()" class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
+    <button onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded">Batal</button>
   </div>
 </div>
 
 <script>
-// === DATA SIMPAN DI LOCALSTORAGE ===
-let data = JSON.parse(localStorage.getItem('jakunData')) || {
-  warga: [], kas: [], laporan: [], kegiatan: [], pengumuman: [],
-  pengurus: {rw:'', rt13:'', rt14:'', waRW:'', waRT13:'', waRT14:''},
-  passwords: {admin:'jakun123', rw:'jakun321', rt13:'jakun321', rt14:'jakun321'}
-};
-let role = 'warga';
+let dataWarga = JSON.parse(localStorage.getItem('dataWarga')) || [];
+let pengaturan = JSON.parse(localStorage.getItem('pengaturan')) || {};
 
-function save() { localStorage.setItem('jakunData', JSON.stringify(data)); }
+function showDashboard(role){ document.getElementById('loginPage').classList.add('hidden'); document.getElementById('dashboard').classList.remove('hidden'); renderWarga(); loadPengaturan(); }
+function showLoginAdmin(){ document.getElementById('loginPage').classList.add('hidden'); document.getElementById('loginAdminForm').classList.remove('hidden'); }
+function backToLogin(){ document.getElementById('loginAdminForm').classList.add('hidden'); document.getElementById('loginPage').classList.remove('hidden'); }
+function login(){ if(document.getElementById('username').value=='admin' && document.getElementById('password').value=='jakun123'){ showDashboard('admin'); }else{ alert('Login gagal'); } }
+function showTab(tab){ ['dashboardTab','wargaTab','kasTab','pengaturanTab'].forEach(t=>document.getElementById(t).classList.add('hidden')); document.getElementById(tab).classList.remove('hidden'); }
+function showModalTambah(){ document.getElementById('modalTambah').style.display='block'; }
+function closeModal(){ document.getElementById('modalTambah').style.display='none'; }
 
-// === LOGIN ===
-function showAdminLogin() { document.getElementById('adminLogin').style.display = 'block'; }
-function login(r) {
-  if(r==='admin') {
-    let u=document.getElementById('user').value, p=document.getElementById('pass').value;
-    if(!Object.values(data.passwords).includes(p)) { alert('Password salah'); return; }
-    role = u; 
-    if(u==='admin') document.getElementById('btnPengaturan').style.display='block';
-    if(u==='admin' || u==='rw') document.getElementById('formKegiatan').style.display='block';
-    if(u==='admin' || u==='rw') document.getElementById('formPengumuman').style.display='block';
-  }
-  document.getElementById('loginPage').style.display='none';
-  document.getElementById('app').style.display='block';
-  renderAll();
+function simpanWarga(){
+  let warga = {
+    noKK: document.getElementById('noKK').value,
+    nama: document.getElementById('namaKepala').value,
+    rt: document.getElementById('rt').value,
+    wa: document.getElementById('noWA').value
+  };
+  dataWarga.push(warga);
+  localStorage.setItem('dataWarga', JSON.stringify(dataWarga));
+  closeModal();
+  renderWarga();
+  loadPengaturan();
+  alert('Data berhasil disimpan');
 }
 
-// === NAVIGASI ===
-function showTab(id) {
-  document.querySelectorAll('.content').forEach(c=>c.classList.remove('active'));
-  document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
+function renderWarga(){
+  let html = '';
+  dataWarga.forEach((w,i)=>{
+    html += `<div class="bg-white p-3 rounded shadow mb-2">
+      <b>${w.nama}</b><br>KK: ${w.noKK}<br>RT: ${w.rt}<br>WA: ${w.wa}
+    </div>`;
+  });
+  document.getElementById('listWarga').innerHTML = html || '<p>Belum ada data</p>';
 }
 
-// === RENDER SEMUA ===
-function renderAll() {
-  renderKontak(); renderUltah(); renderWarga(); renderKas(); renderStatistik(); 
-  renderLaporan(); renderKegiatan(); renderPengumuman();
-}
-
-function renderKontak() {
-  document.getElementById('ketuaRW').innerText = data.pengurus.rw;
-  document.getElementById('waRW').href = 'https://wa.me/'+data.pengurus.waRW;
-}
-// ... Lanjutan fungsi CRUD, statistik, dll bisa dikembangkan dari sini
-
-alert('Aplikasi JAKUN NGAHIJI berhasil dimuat! \nSelanjutnya kita sambungkan ke Google Sheet biar datanya online');
-</script>
-</body>
-</html>
+function loadPengaturan(){
+  let opt = '<option>Pilih Nama</option>';
+  dataWarga.forEach(w=>{ opt += `<option value="${w.nama}">${w.nama} - RT ${w.rt}</option>` });
+  document.getElementById('ketuaRW').innerHTML = opt;
+  document.getElementById
